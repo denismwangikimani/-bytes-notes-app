@@ -1,38 +1,103 @@
-.App {
-  text-align: center;
+/* CSS RESET */
+
+*, *::before, *::after {
+  box-sizing: border-box;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+* {
+  margin: 0;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+body {
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+}
+
+input, button, textarea, select {
+  font: inherit;
+}
+
+p, h1, h2, h3, h4, h5, h6 {
+  overflow-wrap: break-word;
+}
+
+/* APP */
+
+/* container */
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* todos list */
+
+.title {
+text-align: center;   
+}
+
+.todos {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  gap: 1rem;
 }
 
-.App-link {
-  color: #61dafb;
+.todo {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+
+  background-color: rgba(0, 0, 0, 0.1);
+  width: 50%;
+  font-size: 1.5rem;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+
+.todo__status {
+  border: none;
+  padding: 0;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.todo__status:hover {
+  transform: scale(1.1);
+}
+
+/* todo form */
+.form {
+  gap: 0.5rem;
+  width: 50%;
+  margin: 1rem auto;
+
+  display: flex;
+}
+
+.form__input {
+  flex: 1;
+  padding: 0.25rem 0.5rem;
+}
+
+.mutations {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.todo__status,
+.todo__delete {
+  border: none;
+  padding: 0;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.todo__status:hover,
+.todo__delete:hover {
+  transform: scale(1.1);
 }
