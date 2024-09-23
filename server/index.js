@@ -1,9 +1,10 @@
 // server/index.js
+// Import express and cors
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
-const { connectToMongoDB } = require("./database");
-const path = require("path");
+import { connectToMongoDB } from "./database";
+import { join } from "path";
 
 // Create an instance of express
 const app = express();
@@ -22,21 +23,21 @@ if (process.env.NODE_ENV === "production") {
 }
 
 // Middleware to parse JSON
-app.use(express.json());
+app.use(json());
 
 // Import the router
-const router = require("./router");
+import router from "./router";
 
 // Use /api as the base route for our router
 app.use("/api", router);
 
 // Serve the static files from the React app
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "build")));
+  app.use(static(join(__dirname, "build")));
 
   // Handle React routing, return all requests to React app
   app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "build", "index.html"));
+    res.sendFile(join(__dirname, "build", "index.html"));
   });
 }
 
