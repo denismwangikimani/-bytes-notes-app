@@ -26,7 +26,7 @@ if (process.env.NODE_ENV === "production") {
 app.use(json());
 
 // Import the router
-import router from "./router";
+const router = require("./router");
 
 // Use /api as the base route for our router
 app.use("/api", router);
