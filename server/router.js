@@ -1,12 +1,12 @@
 //we will use express router to handle the endpoint between the server and the client.
 //we will have get, post, put, and delete endpoints.
-const express = require("express");
+import { Router } from "express";
 // create an instance of our router
-const router = express.Router();
+const router = Router();
 // import the getCollection function from our models
-const { getCollection } = require("./models/index");
+import { getCollection } from "./models/index";
 // import ObjectId from mongodb so as to use it to query the database
-const { ObjectId } = require("mongodb");
+import { ObjectId } from "mongodb";
 
 //get todos
 // GET /todos
@@ -56,4 +56,4 @@ router.put("/todos/:id", async (req, res) => {
 });
 
 //export the router
-module.exports = router;
+export default router;

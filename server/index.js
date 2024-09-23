@@ -1,6 +1,6 @@
 // server/index.js
-// Import express and cors
-import express from "express";
+// Import express, cors, and dotenv
+const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 const { connectToMongoDB } = require("./database");
@@ -26,7 +26,7 @@ if (process.env.NODE_ENV === "production") {
 app.use(json());
 
 // Import the router
-const router = require("./router");
+const router = require("./router").default;
 
 // Use /api as the base route for our router
 app.use("/api", router);
