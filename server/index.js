@@ -3,7 +3,7 @@
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
-import { connectToMongoDB } from "./database";
+const { connectToMongoDB } = require("./database");
 import { join } from "path";
 
 // Create an instance of express
