@@ -7,7 +7,7 @@ export default function App() {
 
   useEffect(() => {
     async function getTodos() {
-      const res = await fetch("http://localhost:5000/api/todos");
+      const res = await fetch("https://bytes-notes-app.onrender.com/api/todos");
       const todos = await res.json();
 
       setTodos(todos);
@@ -18,13 +18,16 @@ export default function App() {
   const createNewTodo = async (e) => {
     e.preventDefault();
     if (content.length > 3) {
-      const res = await fetch("http://localhost:5000/api/todos", {
-        method: "POST",
-        body: JSON.stringify({ todo: content }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const res = await fetch(
+        "https://bytes-notes-app.onrender.com/api/todos",
+        {
+          method: "POST",
+          body: JSON.stringify({ todo: content }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
       const newTodo = await res.json();
 
       setContent("");
