@@ -1,24 +1,27 @@
+// server/database.js
 require("dotenv").config();
 const { MongoClient, ServerApiVersion } = require("mongodb");
 
-const uri = process.env.MONGODB_URI || "mongodb://localhost:27017/";
+const uri = process.env.MONGODB_URI || "mongodb://localhost:27017/myVirtualDatabase";
 
 const options = {
   serverApi: {
     version: ServerApiVersion.v1,
     strict: true,
     deprecationErrors: true,
-  }
+  },
 };
 
 let client;
+
 const connectToMongoDB = async () => {
   if (!client) {
     try {
       client = await MongoClient.connect(uri, options);
       console.log("Connected to MongoDB");
     } catch (error) {
-      console.log(error);
+      console.error("MongoDB connection error:", error);
+      process.exit(1); // Exit process with failure
     }
   }
   return client;
