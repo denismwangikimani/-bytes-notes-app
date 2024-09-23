@@ -1,50 +1,35 @@
-// App.js
-import { useEffect, useState } from "react"; 
+import { useEffect, useState } from "react";
 import Todo from "./Todo";
 
 export default function App() {
   const [todos, setTodos] = useState([]);
   const [content, setContent] = useState("");
 
-  // Use environment variable for API URL
-  const apiUrl = process.env.REACT_APP_API_URL;
+  const API_URL =
+    process.env.REACT_APP_API_URL || "https://bytes-notes-app.onrender.com/api";
 
   useEffect(() => {
     async function getTodos() {
-      try {
-        const res = await fetch(apiUrl);
-        if (!res.ok) {
-          throw new Error(`Error: ${res.status} ${res.statusText}`);
-        }
-        const todos = await res.json();
-        setTodos(todos);
-      } catch (error) {
-        console.error("Failed to fetch todos:", error);
-      }
+      const res = await fetch(`${API_URL}/todos`);
+      const todos = await res.json();
+      setTodos(todos);
     }
     getTodos();
-  }, [apiUrl]);
+  }, [API_URL]);
 
   const createNewTodo = async (e) => {
     e.preventDefault();
     if (content.length > 3) {
-      try {
-        const res = await fetch(apiUrl, {
-          method: "POST",
-          body: JSON.stringify({ todo: content }),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        if (!res.ok) {
-          throw new Error(`Error: ${res.status} ${res.statusText}`);
-        }
-        const newTodo = await res.json();
-        setContent("");
-        setTodos([...todos, newTodo]);
-      } catch (error) {
-        console.error("Failed to create todo:", error);
-      }
+      const res = await fetch(`${API_URL}/todos`, {
+        method: "POST",
+        body: JSON.stringify({ todo: content }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const newTodo = await res.json();
+      setContent("");
+      setTodos([...todos, newTodo]);
     }
   };
 
@@ -67,7 +52,12 @@ export default function App() {
       <div className="todos">
         {todos.length > 0 &&
           todos.map((todo) => (
-            <Todo key={todo._id} todo={todo} setTodos={setTodos} />
+            <Todo
+              key={todo._id}
+              todo={todo}
+              setTodos={setTodos}
+              API_URL={API_URL}
+            />
           ))}
       </div>
     </main>

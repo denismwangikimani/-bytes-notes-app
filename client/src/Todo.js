@@ -1,56 +1,36 @@
-// Todo.js
 export default function Todo(props) {
-  const { todo, setTodos } = props;
-
-  // Use environment variable for API URL
-  const apiUrl = process.env.REACT_APP_API_URL;
+  const { todo, setTodos, API_URL } = props;
 
   const updateTodo = async (todoId, todoStatus) => {
-    try {
-      const res = await fetch(`${apiUrl}/${todoId}`, {
-        method: "PUT",
-        body: JSON.stringify({ status: !todoStatus }), // Toggle status
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      if (!res.ok) {
-        throw new Error(`Error: ${res.status} ${res.statusText}`);
-      }
-      const json = await res.json();
-      if (json.acknowledged) {
-        setTodos((currentTodos) => {
-          return currentTodos.map((currentTodo) => {
-            if (currentTodo._id === todoId) {
-              return { ...currentTodo, status: !currentTodo.status };
-            }
-            return currentTodo;
-          });
+    const res = await fetch(`${API_URL}/todos/${todoId}`, {
+      method: "PUT",
+      body: JSON.stringify({ status: todoStatus }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const json = await res.json();
+    if (json.acknowledged) {
+      setTodos((currentTodos) => {
+        return currentTodos.map((currentTodo) => {
+          if (currentTodo._id === todoId) {
+            return { ...currentTodo, status: !currentTodo.status };
+          }
+          return currentTodo;
         });
-      }
-    } catch (error) {
-      console.error("Failed to update todo:", error);
+      });
     }
   };
 
   const deleteTodo = async (todoId) => {
-    try {
-      const res = await fetch(`${apiUrl}/${todoId}`, {
-        method: "DELETE",
+    const res = await fetch(`${API_URL}/todos/${todoId}`, {
+      method: "DELETE",
+    });
+    const json = await res.json();
+    if (json.acknowledged) {
+      setTodos((currentTodos) => {
+        return currentTodos.filter((currentTodo) => currentTodo._id !== todoId);
       });
-      if (!res.ok) {
-        throw new Error(`Error: ${res.status} ${res.statusText}`);
-      }
-      const json = await res.json();
-      if (json.acknowledged) {
-        setTodos((currentTodos) => {
-          return currentTodos.filter(
-            (currentTodo) => currentTodo._id !== todoId
-          );
-        });
-      }
-    } catch (error) {
-      console.error("Failed to delete todo:", error);
     }
   };
 

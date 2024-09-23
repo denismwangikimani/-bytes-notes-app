@@ -1,61 +1,46 @@
-// server/index.js
-
-// Import express, cors, dotenv, and path using CommonJS
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 const { connectToMongoDB } = require("./database");
 const path = require("path");
 
-// Create an instance of express
+// create an instance of express called app
 const app = express();
 
-// Configure CORS
-if (process.env.NODE_ENV === "production") {
-  // In production, frontend and backend are on the same origin
-  app.use(cors());
-} else {
-  // In development, allow requests from frontend's dev server
-  app.use(
-    cors({
-      origin: "http://localhost:3000",
-    })
-  );
-}
+// CORS configuration
+const corsOptions = {
+  origin: process.env.FRONTEND_URL || "https://bytes-notes-app.onrender.com",
+  optionsSuccessStatus: 200,
+};
 
-// Middleware to parse JSON
+// Use CORS middleware with the defined options
+app.use(cors(corsOptions));
+
+// Parse JSON bodies
 app.use(express.json());
 
-// Import the router
+// import the router
 const router = require("./router");
 
-// Use /api as the base route for our router
+// serve the static files from the React app
+app.use(express.static(path.join(__dirname, "build")));
+
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "build/index.html"));
+});
+
+// use /api as the base route for our router
 app.use("/api", router);
 
-// Serve the static files from the React app
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "build")));
-
-  // Handle React routing, return all requests to React app
-  app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "build", "index.html"));
-  });
-}
-
-// Create a port variable
+// create a port variable
 const port = process.env.PORT || 5000;
 
-// Start the server
+// listen to our server on our localhost
 const startServer = async () => {
-  try {
-    await connectToMongoDB();
-    app.listen(port, () => {
-      console.log(`Server is listening on port ${port}`);
-    });
-  } catch (error) {
-    console.error("Failed to start server:", error);
-    process.exit(1);
-  }
+  await connectToMongoDB();
+  app.listen(port, () => {
+    console.log(`Server is listening on http://localhost:${port}`);
+  });
 };
 
 startServer();
