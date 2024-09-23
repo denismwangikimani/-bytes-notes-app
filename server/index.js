@@ -1,6 +1,6 @@
 // server/index.js
 // Import express and cors
-const express = require("express");
+import express from "express";
 const cors = require("cors");
 require("dotenv").config();
 const { connectToMongoDB } = require("./database");
