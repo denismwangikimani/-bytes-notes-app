@@ -33,7 +33,7 @@ app.use("/api", router);
 
 // Serve the static files from the React app
 if (process.env.NODE_ENV === "production") {
-  app.use(static(join(__dirname, "build")));
+  app.use(express.static(join(__dirname, "build")));
 
   // Handle React routing, return all requests to React app
   app.get("*", (req, res) => {
