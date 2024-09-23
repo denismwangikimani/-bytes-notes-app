@@ -1,19 +1,14 @@
-//we will use express router to handle the endpoint between the server and the client.
-//we will have get, post, put, and delete endpoints.
-import { Router } from "express";
-// create an instance of our router
-const router = Router();
-// import the getCollection function from our models
-import { getCollection } from "./models/index";
-// import ObjectId from mongodb so as to use it to query the database
-import { ObjectId } from "mongodb";
+// server/router.js
 
-//get todos
+const express = require("express");
+const router = express.Router();
+const { getCollection } = require("./models/index");
+const { ObjectId } = require("mongodb");
+
 // GET /todos
 router.get("/todos", async (req, res) => {
   const collection = getCollection();
   const todos = await collection.find({}).toArray();
-
   res.status(200).json(todos);
 });
 
@@ -22,10 +17,10 @@ router.post("/todos", async (req, res) => {
   const collection = getCollection();
   let { todo } = req.body;
 
-  todo = JSON.stringify(todo);
+  // Remove JSON.stringify to store todo as a string
+  // todo = JSON.stringify(todo);
 
   const newTodo = await collection.insertOne({ todo, status: false });
-
   res.status(201).json({ todo, status: false, _id: newTodo.insertedId });
 });
 
@@ -45,7 +40,7 @@ router.put("/todos/:id", async (req, res) => {
   const { status } = req.body;
 
   if (typeof status !== "boolean") {
-    return res.status(400).json({ mssg: "invalid status" });
+    return res.status(400).json({ msg: "invalid status" });
   }
 
   const updatedTodo = await collection.updateOne(
@@ -55,5 +50,5 @@ router.put("/todos/:id", async (req, res) => {
   res.status(200).json(updatedTodo);
 });
 
-//export the router
-export default router;
+// Export the router
+module.exports = router;

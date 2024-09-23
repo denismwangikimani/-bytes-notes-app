@@ -1,10 +1,11 @@
 // server/index.js
-// Import express, cors, and dotenv
+
+// Import express, cors, dotenv, and path using CommonJS
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 const { connectToMongoDB } = require("./database");
-import { join } from "path";
+const path = require("path");
 
 // Create an instance of express
 const app = express();
@@ -23,21 +24,21 @@ if (process.env.NODE_ENV === "production") {
 }
 
 // Middleware to parse JSON
-app.use(json());
+app.use(express.json());
 
 // Import the router
-const router = require("./router").default;
+const router = require("./router");
 
 // Use /api as the base route for our router
 app.use("/api", router);
 
 // Serve the static files from the React app
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(join(__dirname, "build")));
+  app.use(express.static(path.join(__dirname, "build")));
 
   // Handle React routing, return all requests to React app
   app.get("*", (req, res) => {
-    res.sendFile(join(__dirname, "build", "index.html"));
+    res.sendFile(path.join(__dirname, "build", "index.html"));
   });
 }
 
@@ -46,10 +47,15 @@ const port = process.env.PORT || 5000;
 
 // Start the server
 const startServer = async () => {
-  await connectToMongoDB();
-  app.listen(port, () => {
-    console.log(`Server is listening on port ${port}`);
-  });
+  try {
+    await connectToMongoDB();
+    app.listen(port, () => {
+      console.log(`Server is listening on port ${port}`);
+    });
+  } catch (error) {
+    console.error("Failed to start server:", error);
+    process.exit(1);
+  }
 };
 
 startServer();
